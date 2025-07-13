@@ -1,11 +1,11 @@
 "use client"
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { FaReact } from 'react-icons/fa'
 import Image from 'next/image';
 import { SiNextdotjs, SiTypescript, SiTailwindcss, SiFramer, SiRedux } from 'react-icons/si'
-import SilkBackground from './SilkBackground';
+// import SilkBackground from './SilkBackground';
 
 interface MouseEvent {
   clientX: number;
@@ -102,114 +102,114 @@ const MagneticButton = ({ children, className = "", ...props }: { children: Reac
 }
 
 // Animated Background Component
-const AnimatedBackground = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+// const AnimatedBackground = () => {
+//   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   
-  useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener('mousemove', updateMousePosition)
-    return () => window.removeEventListener('mousemove', updateMousePosition)
-  }, [])
+//   useEffect(() => {
+//     const updateMousePosition = (e: MouseEvent) => {
+//       setMousePosition({ x: e.clientX, y: e.clientY })
+//     }
+//     window.addEventListener('mousemove', updateMousePosition)
+//     return () => window.removeEventListener('mousemove', updateMousePosition)
+//   }, [])
 
-  return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900" />
+//   return (
+//     <div className="fixed inset-0 -z-10 overflow-hidden">
+//       <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900" />
       
-      {/* Mouse-following gradient */}
-      <motion.div 
-        className="absolute inset-0 opacity-40"
-        style={{
-          background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.3) 0%, transparent 50%)`
-        }}
-      />
+//       {/* Mouse-following gradient */}
+//       <motion.div 
+//         className="absolute inset-0 opacity-40"
+//         style={{
+//           background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(147, 51, 234, 0.3) 0%, transparent 50%)`
+//         }}
+//       />
       
-      {/* Animated particles */}
-      {[...Array(50)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-white rounded-full opacity-30"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -100, 0],
-            opacity: [0.3, 1, 0.3],
-          }}
-          transition={{
-            duration: Math.random() * 3 + 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
+//       {/* Animated particles */}
+//       {[...Array(50)].map((_, i) => (
+//         <motion.div
+//           key={i}
+//           className="absolute w-1 h-1 bg-white rounded-full opacity-30"
+//           style={{
+//             left: `${Math.random() * 100}%`,
+//             top: `${Math.random() * 100}%`,
+//           }}
+//           animate={{
+//             y: [0, -100, 0],
+//             opacity: [0.3, 1, 0.3],
+//           }}
+//           transition={{
+//             duration: Math.random() * 3 + 2,
+//             repeat: Infinity,
+//             delay: Math.random() * 2,
+//           }}
+//         />
+//       ))}
       
-      {/* Grid overlay */}
-      <div 
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px'
-        }}
-      />
-    </div>
-  )
-}
+//       {/* Grid overlay */}
+//       <div 
+//         className="absolute inset-0 opacity-[0.02]"
+//         style={{
+//           backgroundImage: `
+//             linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+//             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+//           `,
+//           backgroundSize: '50px 50px'
+//         }}
+//       />
+//     </div>
+//   )
+// }
 
 // Cursor Follower
-const CursorFollower = () => {
-  const [isHovering, setIsHovering] = useState(false)
-  const cursorX = useMotionValue(-100)
-  const cursorY = useMotionValue(-100)
-  const springConfig = { damping: 25, stiffness: 700 }
-  const cursorXSpring = useSpring(cursorX, springConfig)
-  const cursorYSpring = useSpring(cursorY, springConfig)
+// const CursorFollower = () => {
+//   const [isHovering, setIsHovering] = useState(false)
+//   const cursorX = useMotionValue(-100)
+//   const cursorY = useMotionValue(-100)
+//   const springConfig = { damping: 25, stiffness: 700 }
+//   const cursorXSpring = useSpring(cursorX, springConfig)
+//   const cursorYSpring = useSpring(cursorY, springConfig)
 
-  useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX - 16)
-      cursorY.set(e.clientY - 16)
-    }
+//   useEffect(() => {
+//     const moveCursor = (e: MouseEvent) => {
+//       cursorX.set(e.clientX - 16)
+//       cursorY.set(e.clientY - 16)
+//     }
 
-    const handleMouseEnter = () => setIsHovering(true)
-    const handleMouseLeave = () => setIsHovering(false)
+//     const handleMouseEnter = () => setIsHovering(true)
+//     const handleMouseLeave = () => setIsHovering(false)
 
-    window.addEventListener('mousemove', moveCursor)
+//     window.addEventListener('mousemove', moveCursor)
     
-    const interactiveElements = document.querySelectorAll('a, button, [data-cursor="pointer"]')
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter)
-      el.addEventListener('mouseleave', handleMouseLeave)
-    })
+//     const interactiveElements = document.querySelectorAll('a, button, [data-cursor="pointer"]')
+//     interactiveElements.forEach(el => {
+//       el.addEventListener('mouseenter', handleMouseEnter)
+//       el.addEventListener('mouseleave', handleMouseLeave)
+//     })
 
-    return () => {
-      window.removeEventListener('mousemove', moveCursor)
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter)
-        el.removeEventListener('mouseleave', handleMouseLeave)
-      })
-    }
-  }, [cursorX, cursorY])
+//     return () => {
+//       window.removeEventListener('mousemove', moveCursor)
+//       interactiveElements.forEach(el => {
+//         el.removeEventListener('mouseenter', handleMouseEnter)
+//         el.removeEventListener('mouseleave', handleMouseLeave)
+//       })
+//     }
+//   }, [cursorX, cursorY])
 
-  return (
-    <motion.div
-      className="fixed top-0 left-0 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full pointer-events-none z-50 mix-blend-difference"
-      style={{
-        x: cursorXSpring,
-        y: cursorYSpring,
-      }}
-      animate={{
-        scale: isHovering ? 1.5 : 1,
-      }}
-      transition={{ type: "spring", stiffness: 500, damping: 28 }}
-    />
-  )
-}
+//   return (
+//     <motion.div
+//       className="fixed top-0 left-0 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full pointer-events-none z-50 mix-blend-difference"
+//       style={{
+//         x: cursorXSpring,
+//         y: cursorYSpring,
+//       }}
+//       animate={{
+//         scale: isHovering ? 1.5 : 1,
+//       }}
+//       transition={{ type: "spring", stiffness: 500, damping: 28 }}
+//     />
+//   )
+// }
 
 // Hero Section with 3D Text Effect
 const frontendSkills = [
@@ -255,53 +255,53 @@ const TypewriterSkills = () => {
   )
 }
 
-const HeroSkillsAnimation = () => {
-  // Array of icon components and their colors
-  const icons = [
-    { icon: <FaReact className="text-cyan-400" />, name: 'React' },
-    { icon: <SiNextdotjs className="text-white" />, name: 'Next.js' },
-    { icon: <SiTypescript className="text-blue-400" />, name: 'TypeScript' },
-    { icon: <SiTailwindcss className="text-teal-300" />, name: 'Tailwind CSS' },
-    { icon: <SiFramer className="text-pink-400" />, name: 'Framer Motion' },
-    { icon: <SiRedux className="text-purple-400" />, name: 'Redux' },
-  ]
+// const HeroSkillsAnimation = () => {
+//   // Array of icon components and their colors
+//   const icons = [
+//     { icon: <FaReact className="text-cyan-400" />, name: 'React' },
+//     { icon: <SiNextdotjs className="text-white" />, name: 'Next.js' },
+//     { icon: <SiTypescript className="text-blue-400" />, name: 'TypeScript' },
+//     { icon: <SiTailwindcss className="text-teal-300" />, name: 'Tailwind CSS' },
+//     { icon: <SiFramer className="text-pink-400" />, name: 'Framer Motion' },
+//     { icon: <SiRedux className="text-purple-400" />, name: 'Redux' },
+//   ]
 
-  // Animate icons in a floating up and down pattern, staggered
-  return (
-    <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 z-20">
-      <div className="relative w-32 h-[340px] flex flex-col items-center justify-center">
-        {icons.map((item, i) => (
-          <motion.div
-            key={item.name}
-            initial={{ y: 0 }}
-            animate={{ y: [0, -20, 0, 20, 0] }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              delay: i * 0.4,
-              ease: "easeInOut"
-            }}
-            className="mb-6 last:mb-0 flex items-center justify-center text-5xl drop-shadow-lg bg-black/40 rounded-full w-16 h-16 border border-white/10 backdrop-blur-md shadow-lg"
-            title={item.name}
-          >
-            {item.icon}
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  )
-}
+//   // Animate icons in a floating up and down pattern, staggered
+//   return (
+//     <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 z-20">
+//       <div className="relative w-32 h-[340px] flex flex-col items-center justify-center">
+//         {icons.map((item, i) => (
+//           <motion.div
+//             key={item.name}
+//             initial={{ y: 0 }}
+//             animate={{ y: [0, -20, 0, 20, 0] }}
+//             transition={{
+//               duration: 4,
+//               repeat: Infinity,
+//               delay: i * 0.4,
+//               ease: "easeInOut"
+//             }}
+//             className="mb-6 last:mb-0 flex items-center justify-center text-5xl drop-shadow-lg bg-black/40 rounded-full w-16 h-16 border border-white/10 backdrop-blur-md shadow-lg"
+//             title={item.name}
+//           >
+//             {item.icon}
+//           </motion.div>
+//         ))}
+//       </div>
+//     </div>
+//   )
+// }
 
 const HeroRightAnimation = () => {
   // Particle configuration
-  const particles = [
+  const particles = useMemo(() => [
     { radius: 120, size: 12, color: 'bg-purple-400', duration: 7, angle: 0 },
     { radius: 80, size: 8, color: 'bg-pink-400', duration: 5, angle: 60 },
     { radius: 100, size: 10, color: 'bg-blue-400', duration: 9, angle: 120 },
     { radius: 60, size: 7, color: 'bg-yellow-300', duration: 6, angle: 200 },
     { radius: 150, size: 14, color: 'bg-emerald-400', duration: 11, angle: 300 },
     { radius: 90, size: 9, color: 'bg-pink-300', duration: 8, angle: 250 },
-  ]
+  ], []);
 
   // Helper to get x/y from polar coordinates
   const getXY = (radius: number, angle: number) => {
@@ -405,7 +405,7 @@ const HeroSection = () => {
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black px-2 sm:px-4">
       {/* Silk animated background for hero only */}
-      <SilkBackground color="#7B7481" speed={5} scale={1} noiseIntensity={1.5} rotation={0} />
+      {/* <SilkBackground color="#7B7481" speed={5} scale={1} noiseIntensity={1.5} rotation={0} /> */}
       {/* Mouse-following gradient */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl pointer-events-none"
@@ -1071,7 +1071,7 @@ const ContactSection = () => {
       await new Promise(resolve => setTimeout(resolve, 1000)) // Simulated API call
       setSubmitStatus('success')
       setFormData({ name: '', email: '', message: '' })
-    } catch (err: unknown) {
+    } catch {
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)

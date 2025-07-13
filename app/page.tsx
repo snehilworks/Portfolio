@@ -1,7 +1,10 @@
 "use client"
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import { useInView } from 'framer-motion'
+import { FaReact } from 'react-icons/fa'
+import Image from 'next/image';
+import { SiNextdotjs, SiTypescript, SiTailwindcss, SiFramer, SiRedux } from 'react-icons/si'
 
 interface MouseEvent {
   clientX: number;
@@ -39,19 +42,19 @@ interface Project {
 }
 
 // Custom Hooks
-const useMousePosition = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+// const useMousePosition = () => {
+//   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   
-  useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener('mousemove', updateMousePosition)
-    return () => window.removeEventListener('mousemove', updateMousePosition)
-  }, [])
+//   useEffect(() => {
+//     const updateMousePosition = (e: MouseEvent) => {
+//       setMousePosition({ x: e.clientX, y: e.clientY })
+//     }
+//     window.addEventListener('mousemove', updateMousePosition)
+//     return () => window.removeEventListener('mousemove', updateMousePosition)
+//   }, [])
   
-  return mousePosition
-}
+//   return mousePosition
+// }
 
 const useScrollAnimation = (threshold = 0.1) => {
   const ref = useRef(null)
@@ -208,6 +211,186 @@ const CursorFollower = () => {
 }
 
 // Hero Section with 3D Text Effect
+const frontendSkills = [
+  "React",
+  "Next.js",
+  "TypeScript",
+  "Tailwind CSS",
+  "Framer Motion",
+  "Redux"
+]
+
+const TypewriterSkills = () => {
+  const [index, setIndex] = useState(0)
+  const [displayed, setDisplayed] = useState("")
+  const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout
+    const currentSkill = frontendSkills[index]
+    if (!deleting && displayed.length < currentSkill.length) {
+      timeout = setTimeout(() => {
+        setDisplayed(currentSkill.slice(0, displayed.length + 1))
+      }, 80)
+    } else if (!deleting && displayed.length === currentSkill.length) {
+      timeout = setTimeout(() => setDeleting(true), 1200)
+    } else if (deleting && displayed.length > 0) {
+      timeout = setTimeout(() => {
+        setDisplayed(currentSkill.slice(0, displayed.length - 1))
+      }, 40)
+    } else if (deleting && displayed.length === 0) {
+      timeout = setTimeout(() => {
+        setDeleting(false)
+        setIndex((prev) => (prev + 1) % frontendSkills.length)
+      }, 300)
+    }
+    return () => clearTimeout(timeout)
+  }, [displayed, deleting, index])
+
+  return (
+    <span className="inline-block font-bold text-3xl md:text-5xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-300 bg-clip-text text-transparent h-12 md:h-16 transition-all duration-300">
+      {displayed}
+      <span className="animate-pulse">|</span>
+    </span>
+  )
+}
+
+const HeroSkillsAnimation = () => {
+  // Array of icon components and their colors
+  const icons = [
+    { icon: <FaReact className="text-cyan-400" />, name: 'React' },
+    { icon: <SiNextdotjs className="text-white" />, name: 'Next.js' },
+    { icon: <SiTypescript className="text-blue-400" />, name: 'TypeScript' },
+    { icon: <SiTailwindcss className="text-teal-300" />, name: 'Tailwind CSS' },
+    { icon: <SiFramer className="text-pink-400" />, name: 'Framer Motion' },
+    { icon: <SiRedux className="text-purple-400" />, name: 'Redux' },
+  ]
+
+  // Animate icons in a floating up and down pattern, staggered
+  return (
+    <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 z-20">
+      <div className="relative w-32 h-[340px] flex flex-col items-center justify-center">
+        {icons.map((item, i) => (
+          <motion.div
+            key={item.name}
+            initial={{ y: 0 }}
+            animate={{ y: [0, -20, 0, 20, 0] }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              delay: i * 0.4,
+              ease: "easeInOut"
+            }}
+            className="mb-6 last:mb-0 flex items-center justify-center text-5xl drop-shadow-lg bg-black/40 rounded-full w-16 h-16 border border-white/10 backdrop-blur-md shadow-lg"
+            title={item.name}
+          >
+            {item.icon}
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const HeroRightAnimation = () => {
+  // Particle configuration
+  const particles = [
+    { radius: 120, size: 12, color: 'bg-purple-400', duration: 7, angle: 0 },
+    { radius: 80, size: 8, color: 'bg-pink-400', duration: 5, angle: 60 },
+    { radius: 100, size: 10, color: 'bg-blue-400', duration: 9, angle: 120 },
+    { radius: 60, size: 7, color: 'bg-yellow-300', duration: 6, angle: 200 },
+    { radius: 150, size: 14, color: 'bg-emerald-400', duration: 11, angle: 300 },
+    { radius: 90, size: 9, color: 'bg-pink-300', duration: 8, angle: 250 },
+  ]
+
+  // Helper to get x/y from polar coordinates
+  const getXY = (radius: number, angle: number) => {
+    const rad = (angle * Math.PI) / 180
+    return {
+      x: radius * Math.cos(rad),
+      y: radius * Math.sin(rad),
+    }
+  }
+
+  // For lines between some particles
+  const lines = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [1, 4], [2, 5]
+  ]
+
+  // Animate the angle for each particle
+  const [angles, setAngles] = useState(particles.map(p => p.angle))
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAngles(prev => prev.map((a, i) => (a + 360 / (particles[i].duration * 60)) % 360))
+    }, 1000 / 60)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 z-20 pointer-events-none select-none">
+      <div className="relative w-[400px] h-[400px] flex items-center justify-center">
+        {/* SVG for lines */}
+        <svg className="absolute left-0 top-0 w-full h-full" style={{ zIndex: 1 }}>
+          {lines.map(([a, b], i) => {
+            const p1 = getXY(particles[a].radius, angles[a])
+            const p2 = getXY(particles[b].radius, angles[b])
+            return (
+              <line
+                key={i}
+                x1={200 + p1.x}
+                y1={200 + p1.y}
+                x2={200 + p2.x}
+                y2={200 + p2.y}
+                stroke="url(#lineGradient)"
+                strokeWidth="2"
+                opacity="0.5"
+              />
+            )
+          })}
+          <defs>
+            <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#a78bfa" />
+              <stop offset="100%" stopColor="#f472b6" />
+            </linearGradient>
+          </defs>
+        </svg>
+        {/* Particles */}
+        {particles.map((particle, i) => {
+          const { x, y } = getXY(particle.radius, angles[i])
+          return (
+            <motion.div
+              key={i}
+              className={`absolute ${particle.color} rounded-full shadow-lg`}
+              style={{
+                width: `${particle.size * 2}px`,
+                height: `${particle.size * 2}px`,
+                left: `calc(50% + ${x}px - ${particle.size}px)` ,
+                top: `calc(50% + ${y}px - ${particle.size}px)` ,
+                filter: 'blur(0.5px)',
+                zIndex: 2,
+              }}
+              animate={{
+                boxShadow: [
+                  `0 0 16px 4px rgba(168,139,250,0.3)`,
+                  `0 0 32px 8px rgba(244,114,182,0.2)`,
+                  `0 0 16px 4px rgba(168,139,250,0.3)`
+                ]
+              }}
+              transition={{
+                duration: particle.duration,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          )
+        })}
+        {/* Central Glow */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-purple-300 via-pink-300 to-yellow-200 rounded-full blur-2xl opacity-60" style={{ zIndex: 0 }} />
+      </div>
+    </div>
+  )
+}
+
 const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   
@@ -220,7 +403,7 @@ const HeroSection = () => {
   }, [])
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black">
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black px-2 sm:px-4">
       {/* Mouse-following gradient */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl pointer-events-none"
@@ -232,41 +415,46 @@ const HeroSection = () => {
         }}
         transition={{ type: "spring", damping: 30 }}
       />
-      
-      <div className="text-center z-10 max-w-4xl mx-auto px-6">
+      {/* Electron Animations: only on md+ */}
+      <div className="hidden md:block absolute left-12 top-1/2 -translate-y-1/2 z-20 pointer-events-none select-none" style={{ transform: 'scaleX(-1) translateY(-50%)' }}>
+        <HeroRightAnimation />
+      </div>
+      <HeroRightAnimation />
+      <div className="text-center z-10 max-w-2xl sm:max-w-3xl mx-auto px-2 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-6">
+          <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-8xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-2 sm:mb-4">
             SNEHIL SHARMA
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+          <div className="mb-4 sm:mb-6 flex justify-center">
+            <TypewriterSkills />
+          </div>
+          <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-gray-300 mb-6 sm:mb-8 leading-relaxed">
             Full-Stack Developer & UI/UX Designer
           </p>
         </motion.div>
-        
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="space-y-6"
+          className="space-y-4 sm:space-y-6"
         >
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm xs:text-base sm:text-lg text-gray-400 max-w-xl mx-auto">
             Crafting exceptional digital experiences with cutting-edge technology and innovative design
           </p>
-          
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 w-full">
             <MagneticButton
-              className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 rounded-full text-white font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+              className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 rounded-full text-white font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
               data-cursor="pointer"
             >
               View My Work
             </MagneticButton>
             <MagneticButton
-              className="border-2 border-purple-500 px-8 py-4 rounded-full text-purple-300 font-semibold hover:bg-purple-500 hover:text-white transition-all duration-300"
+              className="w-full sm:w-auto border-2 border-purple-500 px-8 py-4 rounded-full text-purple-300 font-semibold hover:bg-purple-500 hover:text-white transition-all duration-300"
               data-cursor="pointer"
             >
               Get In Touch
@@ -310,34 +498,20 @@ const ExperienceSection = () => {
       ],
       technologies: ["Vue.js", "Python", "PostgreSQL", "Redis", "WebSocket"],
       color: "from-blue-500 to-cyan-500"
-    },
-    {
-      company: "StartUpVision",
-      role: "Frontend Developer",
-      period: "2019 - 2020",
-      logo: "/companies/startupvision.svg",
-      description: "Created responsive and interactive user interfaces for startup products.",
-      achievements: [
-        "Developed a component library used across 5 different projects",
-        "Reduced bundle size by 45% through code optimization",
-        "Implemented PWA features increasing mobile engagement by 60%"
-      ],
-      technologies: ["React", "TypeScript", "Next.js", "Tailwind CSS", "PWA"],
-      color: "from-green-500 to-emerald-500"
     }
   ]
 
   return (
-    <section ref={ref} className="py-20 md:py-32 px-4 md:px-6 relative">
+    <section ref={ref} className="py-12 sm:py-20 md:py-32 px-2 sm:px-4 md:px-6 relative">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="text-center mb-12 md:mb-20"
+          className="text-center mb-8 sm:mb-12 md:mb-20"
         >
           <div className="inline-block">
-            <h2 className="text-4xl md:text-7xl font-black text-white mb-4 md:mb-6 relative">
+            <h2 className="text-3xl sm:text-4xl md:text-7xl font-black text-white mb-2 sm:mb-4 md:mb-6 relative">
               EXPERIENCE
               <motion.div
                 className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"
@@ -347,12 +521,12 @@ const ExperienceSection = () => {
               />
             </h2>
           </div>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
             My professional journey and achievements
           </p>
         </motion.div>
 
-        <div className="space-y-8 md:space-y-12">
+        <div className="space-y-6 sm:space-y-8 md:space-y-12">
           {experiences.map((exp, index) => (
             <motion.div
               key={exp.company}
@@ -363,8 +537,7 @@ const ExperienceSection = () => {
             >
               {/* Timeline line - hidden on mobile */}
               <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500/50 to-pink-500/50" />
-              
-              <div className="relative grid md:grid-cols-2 gap-4 md:gap-8 items-center">
+              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center">
                 {/* Company info */}
                 <motion.div
                   className={`md:text-right ${index % 2 === 1 ? 'md:order-2' : ''}`}
@@ -372,46 +545,44 @@ const ExperienceSection = () => {
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.8, delay: index * 0.2 + 0.2 }}
                 >
-                  <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:bg-white/10 transition-all duration-500">
+                  <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 hover:bg-white/10 transition-all duration-500">
                     <div className="absolute inset-0 bg-gradient-to-r opacity-10 rounded-2xl md:rounded-3xl" style={{ backgroundImage: `linear-gradient(to right, ${exp.color})` }} />
-                    
                     <div className="relative z-10">
                       {/* Company Logo */}
-                      <div className="flex items-center gap-4 mb-4 md:mb-6">
-                        <div className="h-12 md:h-16 flex items-center justify-center">
-                          <img 
-                            src={exp.logo} 
-                            alt={`${exp.company} logo`}
-                            className="h-full w-auto object-contain"
-                            style={{
-                              maxWidth: exp.company === "LENS Corporation" ? "201px" : "232px",
-                              maxHeight: exp.company === "LENS Corporation" ? "83px" : "65px"
-                            }}
-                          />
+                      <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 md:mb-6">
+                        <div className="h-10 sm:h-12 md:h-16 flex items-center justify-center">
+                        <Image
+                          src={`/${exp.logo}`}
+                          alt={`${exp.company} logo`}
+                          width={exp.company === "LENS Corporation" ? 120 : 140}
+                          height={exp.company === "LENS Corporation" ? 50 : 45}
+                          className="h-full w-auto object-contain"
+                          style={{
+                            maxWidth: exp.company === "LENS Corporation" ? "120px" : "140px",
+                            maxHeight: exp.company === "LENS Corporation" ? "50px" : "45px"
+                          }}
+                        />
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-xl md:text-2xl font-bold text-white">{exp.company}</h3>
-                          <p className="text-lg md:text-xl text-purple-300">{exp.role}</p>
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight">{exp.company}</h3>
+                          <p className="text-base sm:text-lg md:text-xl text-purple-300 leading-tight">{exp.role}</p>
                         </div>
                       </div>
-                      
-                      <p className="text-sm md:text-base text-gray-400 mb-4 md:mb-6">{exp.period}</p>
-                      <p className="text-sm md:text-base text-gray-300 mb-4 md:mb-6">{exp.description}</p>
-                      
-                      <div className="space-y-3 md:space-y-4">
+                      <p className="text-xs sm:text-sm md:text-base text-gray-400 mb-2 sm:mb-4 md:mb-6">{exp.period}</p>
+                      <p className="text-xs sm:text-sm md:text-base text-gray-300 mb-2 sm:mb-4 md:mb-6">{exp.description}</p>
+                      <div className="space-y-2 sm:space-y-3 md:space-y-4">
                         {exp.achievements.map((achievement, i) => (
-                          <div key={i} className="flex items-start gap-3">
+                          <div key={i} className="flex items-start gap-2 sm:gap-3">
                             <span className="text-purple-400 mt-1">•</span>
-                            <p className="text-sm md:text-base text-gray-300">{achievement}</p>
+                            <p className="text-xs sm:text-sm md:text-base text-gray-300">{achievement}</p>
                           </div>
                         ))}
                       </div>
-                      
-                      <div className="flex flex-wrap gap-2 mt-4 md:mt-6 justify-end">
+                      <div className="flex flex-wrap gap-1 sm:gap-2 mt-3 sm:mt-4 md:mt-6 justify-end md:justify-end">
                         {exp.technologies.map((tech) => (
                           <span
                             key={tech}
-                            className="px-2 md:px-3 py-1 bg-white/5 text-gray-300 text-xs md:text-sm rounded-lg border border-white/10"
+                            className="px-2 sm:px-3 py-1 bg-white/5 text-gray-300 text-xs sm:text-sm rounded-lg border border-white/10"
                           >
                             {tech}
                           </span>
@@ -420,7 +591,6 @@ const ExperienceSection = () => {
                     </div>
                   </div>
                 </motion.div>
-
                 {/* Timeline dot - hidden on mobile */}
                 <motion.div
                   className={`hidden md:flex items-center justify-center ${index % 2 === 1 ? 'md:order-1' : ''}`}
@@ -482,7 +652,7 @@ const SkillsSection = () => {
         { name: "PostgreSQL", icon: "🐘" },
         { name: "MongoDB", icon: "🍃" },
         { name: "Redis", icon: "🔴" },
-        { name: "Docker", icon: "🐳" },
+        { name: "Docker", icon: "��" },
         { name: "AWS", icon: "☁️" },
         { name: "CI/CD", icon: "🔄" },
         { name: "Git", icon: "📦" },
@@ -582,7 +752,7 @@ const ProjectsSection = () => {
         features: "15+"
       },
       featured: true,
-      size: "large"
+      size: "medium"
     },
     {
       id: 2,
@@ -599,7 +769,7 @@ const ProjectsSection = () => {
         accuracy: "97%"
       },
       featured: true,
-      size: "medium"
+      size: "small"
     },
     {
       id: 3,
@@ -615,7 +785,7 @@ const ProjectsSection = () => {
         latency: "<100ms"
       },
       featured: false,
-      size: "medium"
+      size: "small"
     },
     {
       id: 4,
@@ -631,7 +801,7 @@ const ProjectsSection = () => {
         performance: "96%"
       },
       featured: false,
-      size: "small"
+      size: "medium"
     },
     {
       id: 5,
@@ -647,7 +817,7 @@ const ProjectsSection = () => {
         accuracy: "95%"
       },
       featured: true,
-      size: "small"
+      size: "medium"
     },
     {
       id: 6,
@@ -663,7 +833,7 @@ const ProjectsSection = () => {
         performance: "98%"
       },
       featured: false,
-      size: "large"
+      size: "small"
     }
   ]
 
@@ -899,7 +1069,7 @@ const ContactSection = () => {
       await new Promise(resolve => setTimeout(resolve, 1000)) // Simulated API call
       setSubmitStatus('success')
       setFormData({ name: '', email: '', message: '' })
-    } catch (error) {
+    } catch (err: any) {
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)

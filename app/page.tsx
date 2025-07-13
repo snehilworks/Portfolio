@@ -2,9 +2,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { FaReact } from 'react-icons/fa'
 import Image from 'next/image';
-import { SiNextdotjs, SiTypescript, SiTailwindcss, SiFramer, SiRedux } from 'react-icons/si'
 // import SilkBackground from './SilkBackground';
 
 interface MouseEvent {

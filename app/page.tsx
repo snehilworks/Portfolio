@@ -5,6 +5,7 @@ import { useInView } from 'framer-motion'
 import { FaReact } from 'react-icons/fa'
 import Image from 'next/image';
 import { SiNextdotjs, SiTypescript, SiTailwindcss, SiFramer, SiRedux } from 'react-icons/si'
+import SilkBackground from './SilkBackground';
 
 interface MouseEvent {
   clientX: number;
@@ -212,12 +213,11 @@ const CursorFollower = () => {
 
 // Hero Section with 3D Text Effect
 const frontendSkills = [
-  "React",
   "Next.js",
-  "TypeScript",
-  "Tailwind CSS",
-  "Framer Motion",
-  "Redux"
+  "TypeScript", 
+  "GoLang",
+  "Cloud",
+  "NodeJS"
 ]
 
 const TypewriterSkills = () => {
@@ -324,7 +324,7 @@ const HeroRightAnimation = () => {
       setAngles(prev => prev.map((a, i) => (a + 360 / (particles[i].duration * 60)) % 360))
     }, 1000 / 60)
     return () => clearInterval(interval)
-  }, [])
+  }, [particles])
 
   return (
     <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 z-20 pointer-events-none select-none">
@@ -404,6 +404,8 @@ const HeroSection = () => {
 
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black px-2 sm:px-4">
+      {/* Silk animated background for hero only */}
+      <SilkBackground color="#7B7481" speed={5} scale={1} noiseIntensity={1.5} rotation={0} />
       {/* Mouse-following gradient */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl pointer-events-none"
@@ -434,7 +436,7 @@ const HeroSection = () => {
             <TypewriterSkills />
           </div>
           <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-gray-300 mb-6 sm:mb-8 leading-relaxed">
-            Full-Stack Developer & UI/UX Designer
+            Full-Stack Developer
           </p>
         </motion.div>
         <motion.div
@@ -652,7 +654,7 @@ const SkillsSection = () => {
         { name: "PostgreSQL", icon: "🐘" },
         { name: "MongoDB", icon: "🍃" },
         { name: "Redis", icon: "🔴" },
-        { name: "Docker", icon: "��" },
+        { name: "Docker", icon: "🐳" },
         { name: "AWS", icon: "☁️" },
         { name: "CI/CD", icon: "🔄" },
         { name: "Git", icon: "📦" },
@@ -1069,7 +1071,7 @@ const ContactSection = () => {
       await new Promise(resolve => setTimeout(resolve, 1000)) // Simulated API call
       setSubmitStatus('success')
       setFormData({ name: '', email: '', message: '' })
-    } catch (err: any) {
+    } catch (err: unknown) {
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -1089,7 +1091,7 @@ const ContactSection = () => {
             GET IN TOUCH
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Let's create something extraordinary together
+            Let&apos;s create something extraordinary together
           </p>
         </motion.div>
 
@@ -1180,8 +1182,9 @@ const ContactSection = () => {
 export default function PortfolioSections() {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden relative [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/50 [&::-webkit-scrollbar-thumb]:bg-purple-500/50 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-purple-500/70 [&::-webkit-scrollbar]:hover:w-3 transition-all duration-300">
-      <AnimatedBackground />
-      <CursorFollower />
+      {/* SilkBackground removed from here, now only in HeroSection */}
+      {/* <AnimatedBackground /> */}
+      {/* <CursorFollower /> */}
       <HeroSection />
       <ExperienceSection />
       <SkillsSection />

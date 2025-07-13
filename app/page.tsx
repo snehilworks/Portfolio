@@ -61,8 +61,14 @@ const useScrollAnimation = (threshold = 0.1) => {
   return { ref, isInView }
 }
 
+type MagneticButtonProps = React.ComponentProps<typeof motion.button> & {
+  children?: React.ReactNode;
+  className?: string;
+};
+
+
 // Magnetic Button Component
-const MagneticButton = ({ children, className = "", ...props }: { children: React.ReactNode; className?: string; [key: string]: any }) => {
+const MagneticButton = ({ children, className = "", ...props }: MagneticButtonProps) => {
   const ref = useRef<HTMLButtonElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)

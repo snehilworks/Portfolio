@@ -155,12 +155,10 @@ const SilkBackground: React.FC<SilkProps> = ({
   );
 
   return (
-    <div className="absolute inset-0 w-full h-full -z-10" style={{ pointerEvents: "none" }}>
-      <Canvas dpr={[1, 2]} frameloop="always">
-        <SilkPlane ref={meshRef} uniforms={uniforms} />
-      </Canvas>
-    </div>
+    <Canvas dpr={[1, 2]} frameloop="always">
+      <SilkPlane ref={meshRef} uniforms={uniforms} />
+    </Canvas>
   );
 };
 
-export default SilkBackground; 
+export default SilkBackground;

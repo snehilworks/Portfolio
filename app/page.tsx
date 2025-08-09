@@ -679,40 +679,12 @@ const ProjectsSection = () => {
         growth: "50% Monthly",
       },
       featured: true,
-      size: "medium",
+      size: "small",
       achievement: "Featured on Product Hunt",
       businessValue: "Promoted environmental awareness among users",
     },
     {
       id: 3,
-      title: "TaskFlow Manager",
-      category: "Productivity SaaS",
-      description:
-        "Team collaboration and project management tool with real-time updates, file sharing, and progress tracking.",
-      longDescription:
-        "Created a modern project management solution with features like task assignment, real-time collaboration, file uploads, progress tracking, and team analytics. Implemented responsive design, real-time notifications, and integrated calendar functionality.",
-      image: "📋",
-      technologies: [
-        "React",
-        "Express.js",
-        "Socket.io",
-        "PostgreSQL",
-        "AWS S3",
-        "Material-UI",
-      ],
-      metrics: {
-        teams: "50+ Teams",
-        productivity: "30% Increase",
-        features: "25+ Features",
-        satisfaction: "4.8/5 Rating",
-      },
-      featured: true,
-      size: "medium",
-      achievement: "Used by Local Startups",
-      businessValue: "Increased team productivity and collaboration",
-    },
-    {
-      id: 4,
       title: "Personal Portfolio v2",
       category: "Creative Showcase",
       description:
@@ -739,6 +711,34 @@ const ProjectsSection = () => {
       achievement: "Impressed Potential Employers",
       businessValue: "Showcases technical skills effectively",
     },
+    {
+      id: 4,
+      title: "TaskFlow Manager",
+      category: "Productivity SaaS",
+      description:
+        "Team collaboration and project management tool with real-time updates, file sharing, and progress tracking.",
+      longDescription:
+        "Created a modern project management solution with features like task assignment, real-time collaboration, file uploads, progress tracking, and team analytics. Implemented responsive design, real-time notifications, and integrated calendar functionality.",
+      image: "📋",
+      technologies: [
+        "React",
+        "Express.js",
+        "Socket.io",
+        "PostgreSQL",
+        "AWS S3",
+        "Material-UI",
+      ],
+      metrics: {
+        teams: "50+ Teams",
+        productivity: "30% Increase",
+        features: "25+ Features",
+        satisfaction: "4.8/5 Rating",
+      },
+      featured: true,
+      size: "medium",
+      achievement: "Used by Local Startups",
+      businessValue: "Increased team productivity and collaboration",
+    },
   ];
 
   const getGridClass = (project: Project) => {
@@ -762,11 +762,11 @@ const ProjectsSection = () => {
           className="text-center mb-20"
         >
           <h2 className="text-6xl md:text-8xl font-black text-white mb-6">
-            GAME-CHANGING PROJECTS
+            PROJECTS
           </h2>
           <p className="text-xl text-gray-300 max-w-4xl mx-auto">
-            Industry-defining solutions that have generated millions in revenue
-            and transformed how businesses operate
+            Building high-impact digital experiences with clean architecture,
+            scalable systems, and a passion for elegant UI.
           </p>
         </motion.div>
 
@@ -960,14 +960,69 @@ const ProjectsSection = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col md:flex-row gap-4">
-                <MagneticButton className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 text-white py-4 px-8 rounded-2xl font-bold text-lg shadow-2xl shadow-amber-500/25">
-                  💼 HIRE FOR SIMILAR PROJECT
+                <MagneticButton className="flex-1 border-2 border-emerald-500 text-emerald-300 py-4 px-8 rounded-2xl font-bold text-lg hover:bg-emerald-500/10 relative overflow-hidden">
+                  {/* Live Pulse */}
+                  <span className="live-indicator mr-2">
+                    <span className="dot"></span>
+                    <span className="pulse"></span>
+                    <span className="pulse"></span>
+                  </span>
+                  Live Website
+                  <style jsx>{`
+                    .live-indicator {
+                      position: relative;
+                      display: inline-flex;
+                      align-items: center;
+                      justify-content: center;
+                      width: 14px;
+                      height: 14px;
+                    }
+
+                    /* Solid center dot */
+                    .dot {
+                      position: absolute;
+                      width: 8px;
+                      height: 8px;
+                      background-color: red;
+                      border-radius: 50%;
+                      z-index: 2;
+                    }
+
+                    /* Pulses (two layers for overlap) */
+                    .pulse {
+                      position: absolute;
+                      width: 14px;
+                      height: 14px;
+                      background-color: red;
+                      border-radius: 50%;
+                      opacity: 0.6;
+                      animation: pulse-ring 1.5s ease-out infinite;
+                      z-index: 1;
+                    }
+
+                    /* Second pulse offset for smooth loop */
+                    .pulse:nth-child(3) {
+                      animation-delay: 0.75s;
+                    }
+
+                    @keyframes pulse-ring {
+                      0% {
+                        transform: scale(1);
+                        opacity: 0.6;
+                      }
+                      70% {
+                        transform: scale(2.2);
+                        opacity: 0;
+                      }
+                      100% {
+                        opacity: 0;
+                      }
+                    }
+                  `}</style>
                 </MagneticButton>
-                <MagneticButton className="flex-1 border-2 border-emerald-500 text-emerald-300 py-4 px-8 rounded-2xl font-bold text-lg hover:bg-emerald-500/10">
-                  📊 DETAILED CASE STUDY
-                </MagneticButton>
+
                 <MagneticButton className="flex-1 border-2 border-blue-500 text-blue-300 py-4 px-8 rounded-2xl font-bold text-lg hover:bg-blue-500/10">
-                  🎯 TECHNICAL DEEP DIVE
+                  💻 Codebase
                 </MagneticButton>
               </div>
             </motion.div>
@@ -1163,24 +1218,6 @@ const ContactSection = () => {
               Modern tech stack expert
             </span>
           </p>
-
-          {/* Competitive Pricing Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.5 }}
-            className="mt-8 inline-block px-8 py-4 bg-gradient-to-r from-purple-600/30 to-blue-600/30 backdrop-blur-lg border border-purple-500/50 rounded-2xl"
-          >
-            <div className="text-center">
-              <div className="text-purple-200 font-bold text-lg">
-                COMPETITIVE RATES
-              </div>
-              <div className="text-white text-3xl font-black">$30-60/hour</div>
-              <div className="text-gray-400 text-sm">
-                Flexible project sizes
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -1195,7 +1232,8 @@ const ContactSection = () => {
               Start Your Project
             </h3>
             <p className="text-gray-400 mb-8">
-              Quality development • Competitive rates • Fast delivery guaranteed
+              Quality development • Fast delivery • Let&apos;s build something
+              amazing
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -1253,23 +1291,24 @@ const ContactSection = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    Budget Range
+                    Project Type
                   </label>
                   <select
-                    value={formData.budget}
+                    value={formData.projectType}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        budget: e.target.value,
+                        projectType: e.target.value,
                       }))
                     }
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors"
                   >
-                    <option value="">Select budget</option>
-                    <option value="1k-5k">$1k - $5k</option>
-                    <option value="5k-15k">$5k - $15k</option>
-                    <option value="15k-30k">$15k - $30k</option>
-                    <option value="30k+">$30k+ (Large Project)</option>
+                    <option value="">Select project type</option>
+                    <option value="web-app">Web Application</option>
+                    <option value="mobile-app">Mobile App</option>
+                    <option value="website">Website</option>
+                    <option value="api">API Development</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
                 <div>
@@ -1287,6 +1326,7 @@ const ContactSection = () => {
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors"
                   >
                     <option value="">Select timeline</option>
+                    <option value="asap">ASAP</option>
                     <option value="1-3months">1-3 months</option>
                     <option value="3-6months">3-6 months</option>
                     <option value="6months+">6+ months</option>
@@ -1342,13 +1382,14 @@ const ContactSection = () => {
             </form>
           </motion.div>
 
-          {/* Contact Info */}
+          {/* Contact Info & Social Links */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="space-y-6"
           >
+            {/* Why Work With Me */}
             <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8">
               <h3 className="text-2xl font-bold text-white mb-6">
                 Why Work With Me
@@ -1407,26 +1448,88 @@ const ContactSection = () => {
               </div>
             </div>
 
-            {contactInfo.map((info, index) => (
-              <motion.div
-                key={info.label}
+            {/* Contact Methods */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.6 }}
+              className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300"
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-3xl">✉️</div>
+                <div className="flex-1">
+                  <h4 className="text-white font-semibold">Email</h4>
+                  <p className="text-purple-300 font-medium">
+                    work.snehil01@gmail.com
+                  </p>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Best way to reach me
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Social Links */}
+            <div className="grid grid-cols-2 gap-4">
+              <motion.a
+                href="https://linkedin.com/in/yourprofile"
+                target="_blank"
+                rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.6 + index * 0.1 }}
-                className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300"
+                transition={{ delay: 0.7 }}
+                className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group"
               >
-                <div className="flex items-center gap-4">
-                  <div className="text-3xl">{info.icon}</div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-semibold">{info.label}</h4>
-                    <p className="text-purple-300 font-medium">{info.value}</p>
-                    <p className="text-gray-400 text-sm mt-1">
-                      {info.description}
-                    </p>
+                <div className="text-center">
+                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
+                    💼
                   </div>
+                  <h4 className="text-white font-semibold">LinkedIn</h4>
+                  <p className="text-gray-400 text-sm">Professional profile</p>
                 </div>
-              </motion.div>
-            ))}
+              </motion.a>
+
+              <motion.a
+                href="https://twitter.com/yourhandle"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.8 }}
+                className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group"
+              >
+                <div className="text-center">
+                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
+                    🐦
+                  </div>
+                  <h4 className="text-white font-semibold">Twitter</h4>
+                  <p className="text-gray-400 text-sm">Follow my journey</p>
+                </div>
+              </motion.a>
+            </div>
+
+            <motion.a
+              href="https://yourportfolio.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.9 }}
+              className="block bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-3xl group-hover:scale-110 transition-transform">
+                  🌟
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-white font-semibold">Portfolio</h4>
+                  <p className="text-purple-300 font-medium">View My Work</p>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Check out my latest projects
+                  </p>
+                </div>
+              </div>
+            </motion.a>
           </motion.div>
         </div>
       </div>

@@ -100,23 +100,133 @@ const MagneticButton = ({
 };
 
 // Premium Animated Background
+// const PremiumBackground = () => {
+//   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+//   useEffect(() => {
+//     const updateMousePosition = (e: MouseEvent) => {
+//       setMousePosition({ x: e.clientX, y: e.clientY });
+//     };
+//     window.addEventListener("mousemove", updateMousePosition);
+//     return () => window.removeEventListener("mousemove", updateMousePosition);
+//   }, []);
+
+//   return (
+//     <div className="fixed inset-0 -z-10 overflow-hidden">
+//       {/* Dynamic gradient background */}
+//       <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950" />
+
+//       {/* Mouse-following premium gradient - hidden on mobile for performance */}
+//       <motion.div
+//         className="absolute inset-0 opacity-30 hidden md:block"
+//         style={{
+//           background: `radial-gradient(circle 800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 25%, rgba(16, 185, 129, 0.05) 50%, transparent 80%)`,
+//         }}
+//       />
+
+//       {/* Floating orbs - reduced on mobile */}
+//       {[...Array(window.innerWidth < 768 ? 4 : 8)].map((_, i) => (
+//         <motion.div
+//           key={i}
+//           className="absolute rounded-full blur-xl opacity-20"
+//           style={{
+//             width: `${
+//               Math.random() * (window.innerWidth < 768 ? 150 : 300) + 100
+//             }px`,
+//             height: `${
+//               Math.random() * (window.innerWidth < 768 ? 150 : 300) + 100
+//             }px`,
+//             left: `${Math.random() * 100}%`,
+//             top: `${Math.random() * 100}%`,
+//             background: `linear-gradient(45deg, ${
+//               ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B", "#EF4444"][
+//                 Math.floor(Math.random() * 5)
+//               ]
+//             }, transparent)`,
+//           }}
+//           animate={{
+//             x: [0, Math.random() * 200 - 100, 0],
+//             y: [0, Math.random() * 200 - 100, 0],
+//             scale: [1, Math.random() * 0.5 + 0.5, 1],
+//           }}
+//           transition={{
+//             duration: Math.random() * 10 + 10,
+//             repeat: Infinity,
+//             delay: Math.random() * 5,
+//           }}
+//         />
+//       ))}
+
+//       {/* Premium grid overlay */}
+//       <div
+//         className="absolute inset-0 opacity-5"
+//         style={{
+//           backgroundImage: `
+//             linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+//             linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+//           `,
+//           backgroundSize: "60px 60px",
+//         }}
+//       />
+//     </div>
+//   );
+// };
+
 const PremiumBackground = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [orbs, setOrbs] = useState<
+    {
+      width: number;
+      height: number;
+      left: string;
+      top: string;
+      bg: string;
+      x: number[];
+      y: number[];
+      scale: number[];
+      duration: number;
+      delay: number;
+    }[]
+  >([]);
 
   useEffect(() => {
+    // Track mouse position
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
     window.addEventListener("mousemove", updateMousePosition);
+
+    // Generate orbs only in browser
+    const orbCount = window.innerWidth < 768 ? 4 : 8;
+    const colors = ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
+    const generatedOrbs = Array.from({ length: orbCount }, () => {
+      const size = Math.random() * (window.innerWidth < 768 ? 150 : 300) + 100;
+      return {
+        width: size,
+        height: size,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        bg: `linear-gradient(45deg, ${
+          colors[Math.floor(Math.random() * colors.length)]
+        }, transparent)`,
+        x: [0, Math.random() * 200 - 100, 0],
+        y: [0, Math.random() * 200 - 100, 0],
+        scale: [1, Math.random() * 0.5 + 0.5, 1],
+        duration: Math.random() * 10 + 10,
+        delay: Math.random() * 5,
+      };
+    });
+    setOrbs(generatedOrbs);
+
     return () => window.removeEventListener("mousemove", updateMousePosition);
   }, []);
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
-      {/* Dynamic gradient background */}
+      {/* Base gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950" />
 
-      {/* Mouse-following premium gradient - hidden on mobile for performance */}
+      {/* Mouse-follow gradient */}
       <motion.div
         className="absolute inset-0 opacity-30 hidden md:block"
         style={{
@@ -124,40 +234,28 @@ const PremiumBackground = () => {
         }}
       />
 
-      {/* Floating orbs - reduced on mobile */}
-      {[...Array(window.innerWidth < 768 ? 4 : 8)].map((_, i) => (
+      {/* Floating orbs */}
+      {orbs.map((orb, i) => (
         <motion.div
           key={i}
           className="absolute rounded-full blur-xl opacity-20"
           style={{
-            width: `${
-              Math.random() * (window.innerWidth < 768 ? 150 : 300) + 100
-            }px`,
-            height: `${
-              Math.random() * (window.innerWidth < 768 ? 150 : 300) + 100
-            }px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            background: `linear-gradient(45deg, ${
-              ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B", "#EF4444"][
-                Math.floor(Math.random() * 5)
-              ]
-            }, transparent)`,
+            width: `${orb.width}px`,
+            height: `${orb.height}px`,
+            left: orb.left,
+            top: orb.top,
+            background: orb.bg,
           }}
-          animate={{
-            x: [0, Math.random() * 200 - 100, 0],
-            y: [0, Math.random() * 200 - 100, 0],
-            scale: [1, Math.random() * 0.5 + 0.5, 1],
-          }}
+          animate={{ x: orb.x, y: orb.y, scale: orb.scale }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: orb.duration,
             repeat: Infinity,
-            delay: Math.random() * 5,
+            delay: orb.delay,
           }}
         />
       ))}
 
-      {/* Premium grid overlay */}
+      {/* Grid overlay */}
       <div
         className="absolute inset-0 opacity-5"
         style={{
@@ -173,12 +271,40 @@ const PremiumBackground = () => {
 };
 
 // Revolutionary Hero Section - Enhanced for Mobile
+// const techStack = [
+//   { name: "System Architecture", level: "Junior", icon: "🏗️" },
+//   { name: "AI/ML Engineering", level: "Junior", icon: "🧠" },
+//   { name: "Blockchain/Web3", level: "Junior", icon: "⛓️" },
+//   { name: "Cloud Native", level: "Junior", icon: "☁️" },
+//   { name: "DevOps/SRE", level: "Junior", icon: "⚡" },
+// ];
+
 const techStack = [
-  { name: "System Architecture", level: "Principal", icon: "🏗️" },
-  { name: "AI/ML Engineering", level: "Expert", icon: "🧠" },
-  { name: "Blockchain/Web3", level: "Expert", icon: "⛓️" },
-  { name: "Cloud Native", level: "Expert", icon: "☁️" },
-  { name: "DevOps/SRE", level: "Expert", icon: "⚡" },
+  {
+    name: "System Architecture",
+    level: "Designed a scalable microservices diagram for a SaaS app",
+    icon: "🏗️",
+  },
+  {
+    name: "AI/ML Engineering",
+    level: "Trained a sentiment analysis model on 10k tweets",
+    icon: "🧠",
+  },
+  {
+    name: "Blockchain/Web3",
+    level: "Built an NFT minting dApp on Ethereum testnet",
+    icon: "⛓️",
+  },
+  {
+    name: "Cloud Native",
+    level: "Deployed app on Kubernetes + CI/CD pipeline",
+    icon: "☁️",
+  },
+  {
+    name: "DevOps/SRE",
+    level: "Automated infra monitoring with Grafana + Prometheus",
+    icon: "⚡",
+  },
 ];
 
 const achievements = [
@@ -338,7 +464,7 @@ const HeroSection = () => {
   );
 };
 
-// Elite Experience Section - Mobile Optimized
+// Experience Section - Mobile Optimized
 const ExperienceSection = () => {
   const { ref, isInView } = useScrollAnimation();
 
@@ -649,6 +775,35 @@ const ProjectsSection = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const projects: Project[] = [
+    {
+      id: 1,
+      title: "EcoTracker 1",
+      category: "Environmental Web App",
+      description:
+        "Full-stack web application helping users track their carbon footprint and discover eco-friendly alternatives.",
+      longDescription:
+        "Developed a comprehensive environmental tracking platform where users can log daily activities, track carbon emissions, and get personalized recommendations. Features include data visualization, social sharing, gamification elements, and integration with environmental APIs.",
+      image: "🌱",
+      technologies: [
+        "Next.js",
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Chart.js",
+        "Tailwind CSS",
+        "Vercel",
+      ],
+      metrics: {
+        users: "500+ Users",
+        engagement: "80% Return Rate",
+        impact: "CO2 Tracking",
+        growth: "50% Monthly",
+      },
+      featured: true,
+      size: "medium",
+      achievement: "Featured on Product Hunt",
+      businessValue: "Promoted environmental awareness among users",
+    },
     {
       id: 2,
       title: "EcoTracker",
@@ -1041,7 +1196,7 @@ const ProjectsSection = () => {
   );
 };
 
-// Elite Testimonials Section - Mobile Optimized
+// Testimonials Section - Mobile Optimized
 const TestimonialsSection = () => {
   const { ref, isInView } = useScrollAnimation();
 
@@ -1140,413 +1295,6 @@ const TestimonialsSection = () => {
     </section>
   );
 };
-
-// Premium Contact Section
-// const ContactSection = () => {
-//   const { ref, isInView } = useScrollAnimation();
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     company: "",
-//     message: "",
-//     budget: "",
-//     timeline: "",
-//   });
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-//   const [submitStatus, setSubmitStatus] = useState<
-//     "idle" | "success" | "error"
-//   >("idle");
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     setIsSubmitting(true);
-//     setSubmitStatus("idle");
-
-//     try {
-//       // Simulate API call
-//       await new Promise((resolve) => setTimeout(resolve, 1500));
-//       setSubmitStatus("success");
-//       setFormData({
-//         name: "",
-//         email: "",
-//         company: "",
-//         message: "",
-//         budget: "",
-//         timeline: "",
-//       });
-//     } catch {
-//       setSubmitStatus("error");
-//     } finally {
-//       setIsSubmitting(false);
-//     }
-//   };
-
-//   const contactInfo = [
-//     {
-//       icon: "📧",
-//       label: "Premium Contact",
-//       value: "snehil@principal-engineer.com",
-//       description: "$50K+ projects only • 24hr response",
-//     },
-//     {
-//       icon: "💼",
-//       label: "LinkedIn",
-//       value: "linkedin.com/in/snehil-elite",
-//       description: "Fortune 500 recommendations",
-//     },
-//     {
-//       icon: "🏆",
-//       label: "Portfolio",
-//       value: "Wall Street & Silicon Valley projects",
-//       description: "Billion-dollar systems architect",
-//     },
-//     {
-//       icon: "🌍",
-//       label: "Global Availability",
-//       value: "US, Europe, Asia timezones",
-//       description: "Remote • On-site for enterprise",
-//     },
-//   ];
-
-//   return (
-//     <section ref={ref} className="py-32 px-6 relative">
-//       <div className="max-w-7xl mx-auto">
-//         <motion.div
-//           initial={{ opacity: 0, y: 100 }}
-//           animate={isInView ? { opacity: 1, y: 0 } : {}}
-//           transition={{ duration: 1 }}
-//           className="text-center mb-20"
-//         >
-//           <h2 className="text-6xl md:text-8xl font-black text-white mb-6">
-//             LET&apos;S WORK TOGETHER
-//           </h2>
-//           <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-//             <span className="text-purple-400 font-bold">
-//               2+ years experience
-//             </span>{" "}
-//             • Available for exciting projects •{" "}
-//             <span className="text-emerald-400 font-bold">
-//               Modern tech stack expert
-//             </span>
-//           </p>
-//         </motion.div>
-
-//         <div className="grid lg:grid-cols-2 gap-12">
-//           {/* Contact Form */}
-//           <motion.div
-//             initial={{ opacity: 0, x: -50 }}
-//             animate={isInView ? { opacity: 1, x: 0 } : {}}
-//             transition={{ duration: 0.8, delay: 0.2 }}
-//             className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-10"
-//           >
-//             <h3 className="text-3xl font-bold text-white mb-2">
-//               Start Your Project
-//             </h3>
-//             <p className="text-gray-400 mb-8">
-//               Quality development • Fast delivery • Let&apos;s build something
-//               amazing
-//             </p>
-
-//             <form onSubmit={handleSubmit} className="space-y-6">
-//               <div className="grid md:grid-cols-2 gap-6">
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-300 mb-2">
-//                     Name *
-//                   </label>
-//                   <input
-//                     type="text"
-//                     value={formData.name}
-//                     onChange={(e) =>
-//                       setFormData((prev) => ({ ...prev, name: e.target.value }))
-//                     }
-//                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
-//                     placeholder="Your name"
-//                     required
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-300 mb-2">
-//                     Company
-//                   </label>
-//                   <input
-//                     type="text"
-//                     value={formData.company}
-//                     onChange={(e) =>
-//                       setFormData((prev) => ({
-//                         ...prev,
-//                         company: e.target.value,
-//                       }))
-//                     }
-//                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
-//                     placeholder="Your company"
-//                   />
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <label className="block text-sm font-semibold text-gray-300 mb-2">
-//                   Email *
-//                 </label>
-//                 <input
-//                   type="email"
-//                   value={formData.email}
-//                   onChange={(e) =>
-//                     setFormData((prev) => ({ ...prev, email: e.target.value }))
-//                   }
-//                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
-//                   placeholder="your@email.com"
-//                   required
-//                 />
-//               </div>
-
-//               <div className="grid md:grid-cols-2 gap-6">
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-300 mb-2">
-//                     Project Type
-//                   </label>
-//                   <select
-//                     value={formData.projectType}
-//                     onChange={(e) =>
-//                       setFormData((prev) => ({
-//                         ...prev,
-//                         projectType: e.target.value,
-//                       }))
-//                     }
-//                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors"
-//                   >
-//                     <option value="">Select project type</option>
-//                     <option value="web-app">Web Application</option>
-//                     <option value="mobile-app">Mobile App</option>
-//                     <option value="website">Website</option>
-//                     <option value="api">API Development</option>
-//                     <option value="other">Other</option>
-//                   </select>
-//                 </div>
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-300 mb-2">
-//                     Timeline
-//                   </label>
-//                   <select
-//                     value={formData.timeline}
-//                     onChange={(e) =>
-//                       setFormData((prev) => ({
-//                         ...prev,
-//                         timeline: e.target.value,
-//                       }))
-//                     }
-//                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors"
-//                   >
-//                     <option value="">Select timeline</option>
-//                     <option value="asap">ASAP</option>
-//                     <option value="1-3months">1-3 months</option>
-//                     <option value="3-6months">3-6 months</option>
-//                     <option value="6months+">6+ months</option>
-//                     <option value="ongoing">Ongoing partnership</option>
-//                   </select>
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <label className="block text-sm font-semibold text-gray-300 mb-2">
-//                   Project Details *
-//                 </label>
-//                 <textarea
-//                   value={formData.message}
-//                   onChange={(e) =>
-//                     setFormData((prev) => ({
-//                       ...prev,
-//                       message: e.target.value,
-//                     }))
-//                   }
-//                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors h-32 resize-none"
-//                   placeholder="Tell me about your project, goals, and challenges..."
-//                   required
-//                 />
-//               </div>
-
-//               <MagneticButton
-//                 type="submit"
-//                 disabled={isSubmitting}
-//                 className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-purple-500/25"
-//               >
-//                 {isSubmitting ? "🚀 Sending..." : "🚀 START THE CONVERSATION"}
-//               </MagneticButton>
-
-//               {submitStatus === "success" && (
-//                 <motion.div
-//                   initial={{ opacity: 0, y: 10 }}
-//                   animate={{ opacity: 1, y: 0 }}
-//                   className="p-4 bg-green-500/20 border border-green-500/30 rounded-xl text-green-300 text-center"
-//                 >
-//                   ✅ Message sent! I&apos;ll get back to you within 24 hours.
-//                 </motion.div>
-//               )}
-//               {submitStatus === "error" && (
-//                 <motion.div
-//                   initial={{ opacity: 0, y: 10 }}
-//                   animate={{ opacity: 1, y: 0 }}
-//                   className="p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300 text-center"
-//                 >
-//                   ❌ Failed to send. Please try again or email me directly.
-//                 </motion.div>
-//               )}
-//             </form>
-//           </motion.div>
-
-//           {/* Contact Info & Social Links */}
-//           <motion.div
-//             initial={{ opacity: 0, x: 50 }}
-//             animate={isInView ? { opacity: 1, x: 0 } : {}}
-//             transition={{ duration: 0.8, delay: 0.4 }}
-//             className="space-y-6"
-//           >
-//             {/* Why Work With Me */}
-//             <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8">
-//               <h3 className="text-2xl font-bold text-white mb-6">
-//                 Why Work With Me
-//               </h3>
-//               <div className="space-y-4">
-//                 <div className="flex items-center gap-4">
-//                   <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
-//                     <span className="text-2xl">🚀</span>
-//                   </div>
-//                   <div>
-//                     <h4 className="text-white font-semibold">
-//                       Modern Tech Stack
-//                     </h4>
-//                     <p className="text-gray-400 text-sm">
-//                       React, Node.js, TypeScript, AWS, and latest tools
-//                     </p>
-//                   </div>
-//                 </div>
-//                 <div className="flex items-center gap-4">
-//                   <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center">
-//                     <span className="text-2xl">💡</span>
-//                   </div>
-//                   <div>
-//                     <h4 className="text-white font-semibold">Problem Solver</h4>
-//                     <p className="text-gray-400 text-sm">
-//                       Strong analytical skills and creative solutions
-//                     </p>
-//                   </div>
-//                 </div>
-//                 <div className="flex items-center gap-4">
-//                   <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-//                     <span className="text-2xl">📈</span>
-//                   </div>
-//                   <div>
-//                     <h4 className="text-white font-semibold">
-//                       Growing Experience
-//                     </h4>
-//                     <p className="text-gray-400 text-sm">
-//                       2+ years with proven track record of delivery
-//                     </p>
-//                   </div>
-//                 </div>
-//                 <div className="flex items-center gap-4">
-//                   <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center">
-//                     <span className="text-2xl">⚡</span>
-//                   </div>
-//                   <div>
-//                     <h4 className="text-white font-semibold">
-//                       Fast & Reliable
-//                     </h4>
-//                     <p className="text-gray-400 text-sm">
-//                       On-time delivery with clean, maintainable code
-//                     </p>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* Contact Methods */}
-//             <motion.div
-//               initial={{ opacity: 0, y: 20 }}
-//               animate={isInView ? { opacity: 1, y: 0 } : {}}
-//               transition={{ delay: 0.6 }}
-//               className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300"
-//             >
-//               <div className="flex items-center gap-4">
-//                 <div className="text-3xl">✉️</div>
-//                 <div className="flex-1">
-//                   <h4 className="text-white font-semibold">Email</h4>
-//                   <p className="text-purple-300 font-medium">
-//                     work.snehil01@gmail.com
-//                   </p>
-//                   <p className="text-gray-400 text-sm mt-1">
-//                     Best way to reach me
-//                   </p>
-//                 </div>
-//               </div>
-//             </motion.div>
-
-//             {/* Social Links */}
-//             <div className="grid grid-cols-2 gap-4">
-//               <motion.a
-//                 href="https://linkedin.com/in/yourprofile"
-//                 target="_blank"
-//                 rel="noopener noreferrer"
-//                 initial={{ opacity: 0, y: 20 }}
-//                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-//                 transition={{ delay: 0.7 }}
-//                 className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group"
-//               >
-//                 <div className="text-center">
-//                   <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
-//                     [in]
-//                   </div>
-//                   <h4 className="text-white font-semibold">LinkedIn</h4>
-//                   <p className="text-gray-400 text-sm">Professional profile</p>
-//                 </div>
-//               </motion.a>
-
-//               <motion.a
-//                 href="https://twitter.com/yourhandle"
-//                 target="_blank"
-//                 rel="noopener noreferrer"
-//                 initial={{ opacity: 0, y: 20 }}
-//                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-//                 transition={{ delay: 0.8 }}
-//                 className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group"
-//               >
-//                 <div className="text-center">
-//                   <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
-//                     𝕏
-//                   </div>
-//                   <h4 className="text-white font-semibold">Twitter</h4>
-//                   <p className="text-gray-400 text-sm">Follow my journey</p>
-//                 </div>
-//               </motion.a>
-//             </div>
-
-//             <motion.a
-//               href="https://yourportfolio.com"
-//               target="_blank"
-//               rel="noopener noreferrer"
-//               initial={{ opacity: 0, y: 20 }}
-//               animate={isInView ? { opacity: 1, y: 0 } : {}}
-//               transition={{ delay: 0.9 }}
-//               className="block bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group"
-//             >
-//               <div className="flex items-center gap-4">
-//                 <div className="text-3xl group-hover:scale-110 transition-transform">
-//                   🌟
-//                 </div>
-//                 <div className="flex-1">
-//                   <h4 className="text-white font-semibold">Portfolio</h4>
-//                   <p className="text-purple-300 font-medium">View My Work</p>
-//                   <p className="text-gray-400 text-sm mt-1">
-//                     Check out my latest projects
-//                   </p>
-//                 </div>
-//               </div>
-//             </motion.a>
-//           </motion.div>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
 
 const ContactSection = () => {
   const { ref, isInView } = useScrollAnimation();
@@ -1949,7 +1697,7 @@ const ContactSection = () => {
 };
 
 // Main Portfolio Component
-export default function ElitePortfolio() {
+export default function Portfolio() {
   return (
     <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden relative">
       <HeroSection />
@@ -1981,8 +1729,7 @@ export default function ElitePortfolio() {
               🚀 Let&apos;s Build Something Amazing
             </MagneticButton>
             <div className="mt-12 pt-8 border-t border-white/10 text-gray-500 text-sm">
-              © 2025 Snehil Sharma • Elite Software Architect • Building the
-              Future
+              © 2025 Snehil Sharma • Software Engineer • Building the Future
             </div>
           </motion.div>
         </div>
